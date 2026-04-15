@@ -33,25 +33,25 @@ export default function Dashboard() {
 
       <div className="metrics-grid">
         <MetricCard
-          icon="👥"
+          icon={<span className="material-symbols-outlined">group</span>}
           value={metrics?.totalMembers ?? 0}
           label="Total Members"
           id="card-total"
         />
         <MetricCard
-          icon="✅"
+          icon={<span className="material-symbols-outlined">check_circle</span>}
           value={metrics?.activeToday ?? 0}
           label="Active Today"
           id="card-active"
         />
         <MetricCard
-          icon="🚫"
+          icon={<span className="material-symbols-outlined">cancel</span>}
           value={metrics?.deniedToday ?? 0}
           label="Denied Today"
           id="card-denied"
         />
         <MetricCard
-          icon="💰"
+          icon={<span className="material-symbols-outlined">payments</span>}
           value={metrics?.monthlyRevenue ?? 0}
           label="Monthly Revenue"
           isCurrency
@@ -61,25 +61,25 @@ export default function Dashboard() {
 
       <div className="dashboard-grid">
         <div className="glass-panel">
-          <h3 className="section-title">📋 Recent Activity</h3>
+          <h3 className="section-title"><span className="material-symbols-outlined">assignment</span> Recent Activity</h3>
           <RecentActivity logs={recentLogs} />
         </div>
         <div className="glass-panel">
-          <h3 className="section-title">⚡ Quick Actions</h3>
+          <h3 className="section-title"><span className="material-symbols-outlined">bolt</span> Quick Actions</h3>
           <div className="quick-actions-grid">
             <button
               className="btn btn-primary btn-block"
               id="btnQuickRegister"
               onClick={() => navigate('/register')}
             >
-              ➕ Register New Member
+              <span className="material-symbols-outlined">person_add</span> Register New Member
             </button>
             <button
               className="btn btn-secondary btn-block"
               id="btnQuickCheckin"
               onClick={() => navigate('/checkin')}
             >
-              🔐 Quick Check-in
+              <span className="material-symbols-outlined">how_to_reg</span> Quick Check-in
             </button>
           </div>
         </div>
@@ -139,7 +139,7 @@ function RecentActivity({ logs }) {
   return logs.map((log) => (
     <div className="activity-item" key={log.id}>
       <div className={`activity-status activity-${log.status}`}>
-        {log.status === 'granted' ? '✓' : '✕'}
+        {log.status === 'granted' ? <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>check</span> : <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>close</span>}
       </div>
       <div className="activity-info">
         <span className="activity-name">{log.member_name}</span>

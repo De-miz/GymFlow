@@ -43,12 +43,12 @@ export function ToastProvider({ children }) {
   );
 }
 
-const ICONS = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
+const ICONS = { success: 'check_circle', error: 'error', warning: 'warning', info: 'info' };
 
 function Toast({ toast }) {
   return (
     <div className={`toast toast-${toast.type}${toast.visible ? ' toast-visible' : ''}`}>
-      <span className="toast-icon">{ICONS[toast.type] || ICONS.info}</span>
+      <span className="toast-icon material-symbols-outlined">{ICONS[toast.type] || ICONS.info}</span>
       <span className="toast-message">{toast.message}</span>
     </div>
   );

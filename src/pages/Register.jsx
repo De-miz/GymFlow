@@ -69,7 +69,7 @@ export default function Register() {
     }
   };
 
-  const TIER_ICONS = { Basic: '🏋️', Premium: '⭐', VIP: '👑' };
+  const TIER_ICONS = { Basic: <span className="material-symbols-outlined">fitness_center</span>, Premium: <span className="material-symbols-outlined">star</span>, VIP: <span className="material-symbols-outlined">workspace_premium</span> };
 
   return (
     <section className="view active" id="view-register">
@@ -90,7 +90,7 @@ export default function Register() {
                 data-tier={plan.tier}
                 onClick={() => setSelectedPlan(plan.tier)}
               >
-                <div className="plan-icon">{TIER_ICONS[plan.tier] || '🏋️'}</div>
+                <div className="plan-icon">{TIER_ICONS[plan.tier] || <span className="material-symbols-outlined">fitness_center</span>}</div>
                 <h3 className="plan-name">{plan.tier}</h3>
                 <div className="plan-price">
                   ${plan.price}<span>/mo</span>
@@ -111,7 +111,7 @@ export default function Register() {
         {/* Form + Member List */}
         <div className="register-form-section">
           <div className="glass-panel">
-            <h3 className="section-title">✏️ New Member</h3>
+            <h3 className="section-title"><span className="material-symbols-outlined">edit</span> New Member</h3>
             <form id="registrationForm" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label className="form-label" htmlFor="regName">Full Name</label>
@@ -163,7 +163,7 @@ export default function Register() {
           </div>
 
           <div className="glass-panel">
-            <h3 className="section-title">👥 Current Members</h3>
+            <h3 className="section-title"><span className="material-symbols-outlined">group</span> Current Members</h3>
             <div className="table-container">
               <table className="data-table" id="membersTable">
                 <thead>

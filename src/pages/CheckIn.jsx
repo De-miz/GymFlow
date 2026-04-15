@@ -122,13 +122,14 @@ export default function CheckIn() {
               className="keypad-btn keypad-backspace"
               onClick={keypadBackspace}
             >
-              ⌫
+              <span className="material-symbols-outlined" style={{ verticalAlign: 'middle' }}>backspace</span>
             </button>
             <button
               className="keypad-btn keypad-enter"
               onClick={handleCheckIn}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
             >
-              🔐 SCAN ACCESS
+              <span className="material-symbols-outlined">lock_open</span> SCAN ACCESS
             </button>
           </div>
         </div>
@@ -158,7 +159,7 @@ export default function CheckIn() {
 function WaitState() {
   return (
     <div className="checkin-wait">
-      <div className="checkin-wait-icon">🔒</div>
+      <div className="checkin-wait-icon material-symbols-outlined">lock</div>
       <p>Enter a Member ID and press SCAN</p>
     </div>
   );

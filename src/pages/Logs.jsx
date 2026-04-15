@@ -27,7 +27,7 @@ export default function Logs() {
 
       <div className="glass-panel">
         <div className="logs-header">
-          <h3 className="section-title">📝 Log History</h3>
+          <h3 className="section-title"><span className="material-symbols-outlined">history_edu</span> Log History</h3>
           <select
             className="log-filter"
             id="logFilter"
@@ -72,8 +72,8 @@ export default function Logs() {
                       </span>
                     </td>
                     <td>
-                      <span className={`log-status log-status-${log.status}`}>
-                        {log.status === 'granted' ? '✓ Granted' : '✕ Denied'}
+                      <span className={`log-status log-status-${log.status}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        {log.status === 'granted' ? <><span className="material-symbols-outlined" style={{fontSize:'1rem'}}>check</span> Granted</> : <><span className="material-symbols-outlined" style={{fontSize:'1rem'}}>close</span> Denied</>}
                       </span>
                     </td>
                     <td>{log.reason}</td>
