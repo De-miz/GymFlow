@@ -110,7 +110,7 @@ function MetricCard({ icon, value, label, isCurrency = false, id }) {
       const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
       const current = Math.round(startVal + (endVal - startVal) * eased);
       el.textContent = isCurrency
-        ? `$${current.toLocaleString()}`
+        ? `GHS ${current.toLocaleString()}`
         : current.toLocaleString();
       if (t < 1) requestAnimationFrame(tick);
     };
@@ -122,7 +122,7 @@ function MetricCard({ icon, value, label, isCurrency = false, id }) {
     <div className="metric-card" id={id}>
       <div className="metric-icon">{icon}</div>
       <div className="metric-value" ref={ref}>
-        {isCurrency ? `$${value}` : value}
+        {isCurrency ? `GHS ${value.toLocaleString()}` : value}
       </div>
       <div className="metric-label">{label}</div>
     </div>

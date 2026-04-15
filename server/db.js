@@ -62,11 +62,11 @@ if (planCount === 0) {
   `);
 
   const seedPlans = db.transaction(() => {
-    insertPlan.run('Basic', 'Basic', 29.99, 1,
+    insertPlan.run('Basic', 'Basic', 250, 1,
       JSON.stringify(['Gym Floor Access', 'Locker Room']));
-    insertPlan.run('Premium', 'Premium', 59.99, 3,
+    insertPlan.run('Premium', 'Premium', 600, 3,
       JSON.stringify(['Gym Floor Access', 'Locker Room', 'Group Classes', 'Sauna']));
-    insertPlan.run('VIP', 'VIP', 99.99, 6,
+    insertPlan.run('VIP', 'VIP', 1000, 6,
       JSON.stringify(['Full Facility Access', 'Personal Trainer', 'Spa & Sauna', 'Priority Booking', 'Guest Pass']));
   });
   seedPlans();

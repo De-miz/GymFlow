@@ -93,7 +93,7 @@ export default function Register() {
                 <div className="plan-icon">{TIER_ICONS[plan.tier] || <span className="material-symbols-outlined">fitness_center</span>}</div>
                 <h3 className="plan-name">{plan.tier}</h3>
                 <div className="plan-price">
-                  ${plan.price}<span>/mo</span>
+                  GHS {plan.price}<span>/mo</span>
                 </div>
                 <div className="plan-duration">
                   {plan.duration_months} month{plan.duration_months > 1 ? 's' : ''}
