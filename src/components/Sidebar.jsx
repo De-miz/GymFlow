@@ -52,7 +52,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <span className="sidebar-version">GymFlow v0.2</span>
+        <span className="sidebar-version">GymFlow v0.2.1</span>
       </div>
     </aside>
   );

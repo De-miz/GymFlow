@@ -177,8 +177,12 @@ app.post('/api/seed', (req, res) => {
 
 // ── Start ─────────────────────────────────────────────────
 
-app.listen(PORT, () => {
-  // Auto-seed on first run
-  seedDemoData();
-  console.log(`⚡ GymFlow API server running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    // Auto-seed on first run
+    seedDemoData();
+    console.log(`⚡ GymFlow API server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;

@@ -8,9 +8,19 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DB_PATH = path.join(__dirname, 'gymflow.db');
+let DB_PATH = path.join(__dirname, 'gymflow.db');
+
+// Vercel Serverless File System Support (Read-Only workaround)
+if (process.env.VERCEL) {
+  DB_PATH = '/tmp/gymflow.db';
+  const sourcePath = path.join(__dirname, 'gymflow.db');
+  if (!fs.existsSync(DB_PATH) && fs.existsSync(sourcePath)) {
+    fs.copyFileSync(sourcePath, DB_PATH);
+  }
+}
 
 const db = new Database(DB_PATH);
 
