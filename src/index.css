@@ -180,6 +180,7 @@ body::before {
 .main-content {
     flex:1; margin-left:var(--sidebar-w);
     padding:32px 40px; min-height:100vh;
+    min-width:0;
 }
 
 /* ── Views ─────────────────────────────────── */
@@ -199,6 +200,7 @@ body::before {
     -webkit-backdrop-filter:blur(12px);
     padding:24px;
     transition:border-color var(--transition), box-shadow var(--transition);
+    min-width:0;
 }
 .glass-panel:hover { border-color:var(--border-medium); }
 
@@ -506,7 +508,7 @@ body::before {
 .log-status-denied  { color:var(--color-danger); }
 
 /* ── Logs Header ───────────────────────────── */
-.logs-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.logs-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
 
 .log-filter {
     padding:8px 16px; background:var(--bg-input);
@@ -669,6 +671,7 @@ body::before {
     .mobile-nav    { display:block; }
     .metrics-grid  { grid-template-columns:repeat(2,1fr); gap:12px; }
     .metric-card   { padding:16px; }
+    .glass-panel   { padding:16px; }
     .metric-value  { font-size:1.5rem; }
     .plan-cards-container { grid-template-columns:1fr; }
     .form-row             { grid-template-columns:1fr; }
