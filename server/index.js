@@ -10,6 +10,8 @@ import cors from 'cors';
 import {
   getAllPlans,
   updatePlanPrice,
+  addPlan,
+  removePlan,
   getAllMembers,
   getMemberById,
   addMember,
@@ -43,6 +45,35 @@ app.put('/api/plans/:tier', (req, res) => {
     if (price === undefined) return res.status(400).json({ error: 'Missing price' });
     const plan = updatePlanPrice(req.params.tier, parseFloat(price));
     res.json(plan);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/plans', (req, res) => {
+  try {
+    const { tier, name, price, duration_months, perks, color } = req.body;
+    if (!tier || !name || price === undefined || !duration_months) {
+      return res.status(400).json({ error: 'Missing required fields: tier, name, price, duration_months' });
+    }
+    const newPlan = addPlan(
+      tier, 
+      name, 
+      parseFloat(price), 
+      parseInt(duration_months, 10), 
+      Array.isArray(perks) ? perks : [],
+      color
+    );
+    res.status(201).json(newPlan);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.delete('/api/plans/:tier', (req, res) => {
+  try {
+    removePlan(req.params.tier);
+    res.json({ success: true });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

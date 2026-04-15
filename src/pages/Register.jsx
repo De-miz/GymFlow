@@ -86,7 +86,8 @@ export default function Register() {
             {plans.map(plan => (
               <div
                 key={plan.tier}
-                className={`plan-card plan-${plan.tier.toLowerCase()}${selectedPlan === plan.tier ? ' selected' : ''}`}
+                className={`plan-card${selectedPlan === plan.tier ? ' selected' : ''}`}
+                style={{ '--plan-color': plan.color }}
                 data-tier={plan.tier}
                 onClick={() => setSelectedPlan(plan.tier)}
               >
@@ -187,7 +188,7 @@ export default function Register() {
                         <td><span className="member-id">{m.member_id}</span></td>
                         <td>{m.name}</td>
                         <td>
-                          <span className={`badge badge-${m.plan_tier.toLowerCase()}`}>
+                          <span className="badge" style={{ '--plan-color': m.plan_color || 'var(--text-muted)' }}>
                             {m.plan_tier}
                           </span>
                         </td>
@@ -243,7 +244,7 @@ function MemberDetail({ member }) {
         </div>
         <div>
           <h3>{m.name}</h3>
-          <span className={`badge badge-${m.plan_tier.toLowerCase()}`}>
+          <span className="badge" style={{ '--plan-color': m.plan_color || 'var(--text-muted)' }}>
             {m.displayBadge}
           </span>
         </div>

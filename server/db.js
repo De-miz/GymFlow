@@ -26,7 +26,8 @@ db.exec(`
     name          TEXT NOT NULL,
     price         REAL NOT NULL,
     duration_months INTEGER NOT NULL,
-    perks         TEXT NOT NULL DEFAULT '[]'
+    perks         TEXT NOT NULL DEFAULT '[]',
+    color         TEXT NOT NULL DEFAULT '#00e5ff'
   );
 
   CREATE TABLE IF NOT EXISTS members (
@@ -58,16 +59,16 @@ db.exec(`
 const planCount = db.prepare('SELECT COUNT(*) AS c FROM plans').get().c;
 if (planCount === 0) {
   const insertPlan = db.prepare(`
-    INSERT INTO plans (tier, name, price, duration_months, perks) VALUES (?, ?, ?, ?, ?)
+    INSERT INTO plans (tier, name, price, duration_months, perks, color) VALUES (?, ?, ?, ?, ?, ?)
   `);
 
   const seedPlans = db.transaction(() => {
     insertPlan.run('Basic', 'Basic', 250, 1,
-      JSON.stringify(['Gym Floor Access', 'Locker Room']));
+      JSON.stringify(['Gym Floor Access', 'Locker Room']), '#00e5ff');
     insertPlan.run('Premium', 'Premium', 600, 3,
-      JSON.stringify(['Gym Floor Access', 'Locker Room', 'Group Classes', 'Sauna']));
+      JSON.stringify(['Gym Floor Access', 'Locker Room', 'Group Classes', 'Sauna']), '#a855f7');
     insertPlan.run('VIP', 'VIP', 1000, 6,
-      JSON.stringify(['Full Facility Access', 'Personal Trainer', 'Spa & Sauna', 'Priority Booking', 'Guest Pass']));
+      JSON.stringify(['Full Facility Access', 'Personal Trainer', 'Spa & Sauna', 'Priority Booking', 'Guest Pass']), '#fbbf24');
   });
   seedPlans();
 }
@@ -105,13 +106,40 @@ export function updatePlanPrice(tier, newPrice) {
   return getPlanByTier(tier);
 }
 
+export function addPlan(tier, name, price, duration_months, perksArray, color) {
+  const existing = getPlanByTier(tier);
+  if (existing) throw new Error(`Plan tier "${tier}" already exists`);
+
+  const planColor = color || `hsl(${Math.floor(Math.random() * 360)}, 80%, 65%)`;
+
+  db.prepare(`
+    INSERT INTO plans (tier, name, price, duration_months, perks, color) 
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(tier, name, price, duration_months, JSON.stringify(perksArray), planColor);
+  
+  return getPlanByTier(tier);
+}
+
+export function removePlan(tier) {
+  try {
+    const result = db.prepare('DELETE FROM plans WHERE tier = ?').run(tier);
+    if (result.changes === 0) throw new Error(`Plan tier ${tier} not found`);
+    return true;
+  } catch (err) {
+    if (err.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
+      throw new Error(`Cannot delete plan "${tier}" because members are using it.`);
+    }
+    throw err;
+  }
+}
+
 
 // ── Members ───────────────────────────────────────────────
 
 export function getAllMembers() {
   const rows = db.prepare(`
     SELECT m.*, p.name AS plan_name, p.price AS plan_price,
-           p.duration_months AS plan_duration_months, p.perks AS plan_perks
+           p.duration_months AS plan_duration_months, p.perks AS plan_perks, p.color AS plan_color
     FROM members m
     JOIN plans p ON m.plan_tier = p.tier
     ORDER BY m.id DESC
@@ -123,7 +151,7 @@ export function getAllMembers() {
 export function getMemberById(memberId) {
   const row = db.prepare(`
     SELECT m.*, p.name AS plan_name, p.price AS plan_price,
-           p.duration_months AS plan_duration_months, p.perks AS plan_perks
+           p.duration_months AS plan_duration_months, p.perks AS plan_perks, p.color AS plan_color
     FROM members m
     JOIN plans p ON m.plan_tier = p.tier
     WHERE m.member_id = ?
@@ -207,14 +235,14 @@ function insertLog(memberId, memberName, planTier, status, reason) {
 }
 
 export function getAccessLogs(filter = 'all') {
-  let query = 'SELECT * FROM access_logs ORDER BY id DESC';
-  if (filter === 'granted') query = "SELECT * FROM access_logs WHERE status = 'granted' ORDER BY id DESC";
-  if (filter === 'denied') query = "SELECT * FROM access_logs WHERE status = 'denied' ORDER BY id DESC";
+  let query = 'SELECT al.*, p.color AS plan_color FROM access_logs al LEFT JOIN plans p ON al.plan_tier = p.tier ORDER BY al.id DESC';
+  if (filter === 'granted') query = "SELECT al.*, p.color AS plan_color FROM access_logs al LEFT JOIN plans p ON al.plan_tier = p.tier WHERE al.status = 'granted' ORDER BY al.id DESC";
+  if (filter === 'denied') query = "SELECT al.*, p.color AS plan_color FROM access_logs al LEFT JOIN plans p ON al.plan_tier = p.tier WHERE al.status = 'denied' ORDER BY al.id DESC";
   return db.prepare(query).all();
 }
 
 export function getRecentLogs(n = 5) {
-  return db.prepare('SELECT * FROM access_logs ORDER BY id DESC LIMIT ?').all(n);
+  return db.prepare('SELECT al.*, p.color AS plan_color FROM access_logs al LEFT JOIN plans p ON al.plan_tier = p.tier ORDER BY al.id DESC LIMIT ?').all(n);
 }
 
 

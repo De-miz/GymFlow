@@ -176,7 +176,7 @@ function GrantedResult({ result }) {
       </div>
       <h2 className="result-title">Access Granted</h2>
       <p className="result-member-name">{m.name}</p>
-      <span className={`badge badge-${m.plan_tier.toLowerCase()}`}>
+      <span className="badge" style={{ '--plan-color': m.plan_color || 'var(--text-muted)' }}>
         {m.displayBadge}
       </span>
       <p className="result-detail">

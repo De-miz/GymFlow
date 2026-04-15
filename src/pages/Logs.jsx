@@ -67,7 +67,7 @@ export default function Logs() {
                     </td>
                     <td>{log.member_name}</td>
                     <td>
-                      <span className={`badge badge-${log.plan_tier.toLowerCase()}`}>
+                      <span className="badge" style={{ '--plan-color': log.plan_color || 'var(--text-muted)' }}>
                         {log.plan_tier}
                       </span>
                     </td>

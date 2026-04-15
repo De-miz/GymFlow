@@ -352,18 +352,19 @@ body::before {
 }
 .plan-card:hover { border-color:var(--border-medium); transform:translateY(-2px); }
 
-.plan-card.selected { transform:translateY(-4px); }
-.plan-card.plan-basic.selected   { border-color:var(--tier-basic);   box-shadow:0 0 30px rgba(0,229,255,.12); }
-.plan-card.plan-premium.selected { border-color:var(--tier-premium); box-shadow:0 0 30px rgba(168,85,247,.12); }
-.plan-card.plan-vip.selected     { border-color:var(--tier-vip);     box-shadow:0 0 30px rgba(251,191,36,.12); }
+.plan-card.selected { 
+    transform:translateY(-4px); 
+    border-color: var(--plan-color, var(--accent-1)); 
+    box-shadow: 0 0 30px color-mix(in srgb, var(--plan-color, var(--accent-1)) 15%, transparent);
+}
 
 .plan-icon { font-size:2rem; margin-bottom:12px; }
 .plan-name { font-family:var(--font-heading); font-size:1.2rem; font-weight:700; margin-bottom:8px; }
 
-.plan-price { font-family:var(--font-heading); font-size:1.8rem; font-weight:800; margin-bottom:4px; }
-.plan-basic   .plan-price { color:var(--tier-basic); }
-.plan-premium .plan-price { color:var(--tier-premium); }
-.plan-vip     .plan-price { color:var(--tier-vip); }
+.plan-price { 
+    font-family:var(--font-heading); font-size:1.8rem; font-weight:800; margin-bottom:4px;
+    color: var(--plan-color, var(--text-primary));
+}
 .plan-price span { font-size:.8rem; font-weight:400; color:var(--text-secondary); }
 
 .plan-duration { color:var(--text-secondary); font-size:.85rem; margin-bottom:16px; }
@@ -406,10 +407,9 @@ body::before {
     padding:4px 10px; border-radius:20px;
     font-size:.75rem; font-weight:600;
     text-transform:uppercase; letter-spacing:.03em;
+    background:color-mix(in srgb, var(--plan-color, var(--text-muted)) 15%, transparent);
+    color:var(--plan-color, var(--text-muted));
 }
-.badge-basic   { background:rgba(0,229,255,.1);   color:var(--tier-basic); }
-.badge-premium { background:rgba(168,85,247,.1);   color:var(--tier-premium); }
-.badge-vip     { background:rgba(251,191,36,.1);   color:var(--tier-vip); }
 .badge-n\/a    { background:rgba(128,128,160,.1);  color:var(--text-muted); }
 
 /* ── Status Dots ───────────────────────────── */

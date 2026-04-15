@@ -31,6 +31,17 @@ export const updatePlanPrice = (tier, price) =>
     body: JSON.stringify({ price })
   });
 
+export const createPlan = (planData) =>
+  request('/plans', {
+    method: 'POST',
+    body: JSON.stringify(planData)
+  });
+
+export const deletePlan = (tier) =>
+  request(`/plans/${tier}`, {
+    method: 'DELETE'
+  });
+
 // ── Members ───────────────────────────────────────────────
 
 export const getMembers = () => request('/members');
