@@ -99,6 +99,12 @@ export function getPlanByTier(tier) {
   return { ...row, perks: JSON.parse(row.perks) };
 }
 
+export function updatePlanPrice(tier, newPrice) {
+  const info = db.prepare('UPDATE plans SET price = ? WHERE tier = ?').run(newPrice, tier);
+  if (info.changes === 0) throw new Error(`Plan tier ${tier} not found`);
+  return getPlanByTier(tier);
+}
+
 
 // ── Members ───────────────────────────────────────────────
 

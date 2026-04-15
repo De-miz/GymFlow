@@ -25,6 +25,12 @@ async function request(url, options = {}) {
 
 export const getPlans = () => request('/plans');
 
+export const updatePlanPrice = (tier, price) => 
+  request(`/plans/${tier}`, {
+    method: 'PUT',
+    body: JSON.stringify({ price })
+  });
+
 // ── Members ───────────────────────────────────────────────
 
 export const getMembers = () => request('/members');

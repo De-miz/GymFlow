@@ -9,6 +9,7 @@ import express from 'express';
 import cors from 'cors';
 import {
   getAllPlans,
+  updatePlanPrice,
   getAllMembers,
   getMemberById,
   addMember,
@@ -33,6 +34,17 @@ app.get('/api/plans', (req, res) => {
     res.json(getAllPlans());
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/plans/:tier', (req, res) => {
+  try {
+    const { price } = req.body;
+    if (price === undefined) return res.status(400).json({ error: 'Missing price' });
+    const plan = updatePlanPrice(req.params.tier, parseFloat(price));
+    res.json(plan);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 });
 

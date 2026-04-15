@@ -21,6 +21,11 @@ const NAV_ITEMS = [
     label: 'Access Logs',
     icon: <span className="material-symbols-outlined">list_alt</span>,
   },
+  {
+    path: '/pricing',
+    label: 'Pricing',
+    icon: <span className="material-symbols-outlined">payments</span>,
+  },
 ];
 
 export default function Sidebar() {
@@ -47,7 +52,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <span className="sidebar-version">GymFlow v2.0</span>
+        <span className="sidebar-version">GymFlow v0.2</span>
       </div>
     </aside>
   );
@@ -59,6 +64,7 @@ export function MobileNav() {
     { ...NAV_ITEMS[1], mobileLabel: 'Register' },
     { ...NAV_ITEMS[2], mobileLabel: 'Check-in' },
     { ...NAV_ITEMS[3], mobileLabel: 'Logs' },
+    { ...NAV_ITEMS[4], mobileLabel: 'Pricing' },
   ];
 
   return (

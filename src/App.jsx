@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Register from './pages/Register';
 import CheckIn from './pages/CheckIn';
 import Logs from './pages/Logs';
+import Pricing from './pages/Pricing';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
             <Route path="register" element={<Register />} />
             <Route path="checkin" element={<CheckIn />} />
             <Route path="logs" element={<Logs />} />
+            <Route path="pricing" element={<Pricing />} />
           </Route>
         </Routes>
       </ToastProvider>
