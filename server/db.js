@@ -66,22 +66,26 @@ db.exec(`
 
 // ── Plans (seed once) ─────────────────────────────────────
 
-const planCount = db.prepare('SELECT COUNT(*) AS c FROM plans').get().c;
-if (planCount === 0) {
-  const insertPlan = db.prepare(`
-    INSERT INTO plans (tier, name, price, duration_months, perks, color) VALUES (?, ?, ?, ?, ?, ?)
-  `);
+const insertPlan = db.prepare(`
+  INSERT INTO plans (tier, name, price, duration_months, perks, color) VALUES (?, ?, ?, ?, ?, ?)
+`);
+const checkPlan = db.prepare('SELECT tier FROM plans WHERE tier = ?');
 
-  const seedPlans = db.transaction(() => {
+const ensureDefaultPlans = db.transaction(() => {
+  if (!checkPlan.get('Basic')) {
     insertPlan.run('Basic', 'Basic', 250, 1,
       JSON.stringify(['Gym Floor Access', 'Locker Room']), '#00e5ff');
+  }
+  if (!checkPlan.get('Premium')) {
     insertPlan.run('Premium', 'Premium', 600, 3,
       JSON.stringify(['Gym Floor Access', 'Locker Room', 'Group Classes', 'Sauna']), '#a855f7');
+  }
+  if (!checkPlan.get('VIP')) {
     insertPlan.run('VIP', 'VIP', 1000, 6,
       JSON.stringify(['Full Facility Access', 'Personal Trainer', 'Spa & Sauna', 'Priority Booking', 'Guest Pass']), '#fbbf24');
-  });
-  seedPlans();
-}
+  }
+});
+ensureDefaultPlans();
 
 
 // ── Helper: generate unique random 4-digit member ID ──────
