@@ -172,6 +172,7 @@ export default function Register() {
                     <th>ID</th>
                     <th>Name</th>
                     <th>Plan</th>
+                    <th>Date Joined</th>
                     <th>Expires</th>
                     <th>Status</th>
                     <th></th>
@@ -180,7 +181,7 @@ export default function Register() {
                 <tbody id="membersTableBody">
                   {members.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className="empty-state">No members registered</td>
+                      <td colSpan="7" className="empty-state">No members registered</td>
                     </tr>
                   ) : (
                     members.map(m => (
@@ -192,6 +193,7 @@ export default function Register() {
                             {m.plan_tier}
                           </span>
                         </td>
+                        <td>{fmtDate(m.member_since)}</td>
                         <td>{fmtDate(m.expiry_date)}</td>
                         <td>
                           <span className={`status-dot status-${m.isActive ? 'active' : 'expired'}`}></span>
