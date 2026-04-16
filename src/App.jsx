@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 import { ToastProvider } from './components/Toast';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -6,8 +7,19 @@ import Register from './pages/Register';
 import CheckIn from './pages/CheckIn';
 import Logs from './pages/Logs';
 import Pricing from './pages/Pricing';
+import Auth from './pages/Auth';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('adminToken'));
+
+  if (!isAuthenticated) {
+    return (
+      <ToastProvider>
+        <Auth onLogin={() => setIsAuthenticated(true)} />
+      </ToastProvider>
+    );
+  }
+
   return (
     <BrowserRouter>
       <ToastProvider>

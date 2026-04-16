@@ -20,7 +20,10 @@ import {
   getAccessLogs,
   getRecentLogs,
   getMetrics,
-  seedDemoData
+  seedDemoData,
+  registerAdmin,
+  loginAdmin,
+  verifyAdminToken
 } from './db.js';
 
 const app = express();
@@ -28,6 +31,47 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+
+// ── Authentication Middleware ─────────────────────────────
+const authenticateAdmin = (req, res, next) => {
+  // Public routes
+  if (req.path.startsWith('/api/auth') || req.path === '/api/checkin') {
+    return next();
+  }
+  
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+  
+  if (!verifyAdminToken(token)) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+};
+
+app.use(authenticateAdmin);
+
+// ── Auth Endpoints ────────────────────────────────────────
+
+app.post('/api/auth/register', (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) return res.status(400).json({ error: 'Missing credentials' });
+    registerAdmin(username, password);
+    res.status(201).json({ success: true });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/auth/login', (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const authData = loginAdmin(username, password);
+    res.json(authData);
+  } catch (err) {
+    res.status(401).json({ error: err.message });
+  }
+});
 
 // ── Plans ─────────────────────────────────────────────────
 

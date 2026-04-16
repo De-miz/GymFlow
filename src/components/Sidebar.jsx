@@ -51,8 +51,19 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="sidebar-footer">
-        <span className="sidebar-version">GymFlow v0.2.1</span>
+      <div className="sidebar-footer" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <button 
+          className="btn btn-secondary" 
+          style={{ width: '100%', fontSize: '0.85rem', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+          onClick={() => {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUsername');
+            window.location.reload();
+          }}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>logout</span> Logout
+        </button>
+        <span className="sidebar-version">GymFlow Admin Panel</span>
       </div>
     </aside>
   );

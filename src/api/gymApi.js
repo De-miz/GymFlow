@@ -7,10 +7,22 @@
 const API_BASE = '/api';
 
 async function request(url, options = {}) {
+  const headers = { 'Content-Type': 'application/json', ...options.headers };
+  const token = localStorage.getItem('adminToken');
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${API_BASE}${url}`, {
-    headers: { 'Content-Type': 'application/json' },
     ...options,
+    headers,
   });
+
+  if (res.status === 401 && !url.startsWith('/auth')) {
+    localStorage.removeItem('adminToken');
+    window.location.reload();
+    return;
+  }
 
   const data = await res.json();
 

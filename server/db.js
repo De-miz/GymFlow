@@ -9,6 +9,7 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import crypto from 'crypto';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let DB_PATH = path.join(__dirname, 'gymflow.db');
@@ -62,6 +63,12 @@ db.exec(`
     timestamp     TEXT NOT NULL DEFAULT (datetime('now'))
   );
 
+  CREATE TABLE IF NOT EXISTS admins (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    username      TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL
+  );
+
 `);
 
 // ── Plans (seed once) ─────────────────────────────────────
@@ -98,6 +105,53 @@ function generateUniqueMemberId() {
     id = String(Math.floor(1000 + Math.random() * 9000));
   } while (existing.get(id));
   return id;
+}
+
+
+// ── Admin Auth ────────────────────────────────────────────
+
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+  return `${salt}:${hash}`;
+}
+
+function verifyPassword(password, storedHash) {
+  const [salt, hash] = storedHash.split(':');
+  const hashVerify = crypto.scryptSync(password, salt, 64).toString('hex');
+  return hash === hashVerify;
+}
+
+export function registerAdmin(username, password) {
+  const existing = db.prepare('SELECT id FROM admins WHERE username = ?').get(username);
+  if (existing) throw new Error('Username already exists');
+  
+  const h = hashPassword(password);
+  db.prepare('INSERT INTO admins (username, password_hash) VALUES (?, ?)').run(username, h);
+  return true;
+}
+
+export function loginAdmin(username, password) {
+  const admin = db.prepare('SELECT * FROM admins WHERE username = ?').get(username);
+  if (!admin) throw new Error('Invalid credentials');
+  if (!verifyPassword(password, admin.password_hash)) throw new Error('Invalid credentials');
+  
+  // Create native zero-dependency signed token
+  const payload = Buffer.from(JSON.stringify({ id: admin.id, username, exp: Date.now() + (86400000 * 7) })).toString('base64');
+  const signature = crypto.createHmac('sha256', process.env.JWT_SECRET || 'gymflow_super_secret').update(payload).digest('hex');
+  return { token: `${payload}.${signature}`, username: admin.username };
+}
+
+export function verifyAdminToken(token) {
+  if (!token) return false;
+  const [payload, signature] = token.split('.');
+  if (!payload || !signature) return false;
+  const expectedSignature = crypto.createHmac('sha256', process.env.JWT_SECRET || 'gymflow_super_secret').update(payload).digest('hex');
+  if (signature !== expectedSignature) return false;
+  
+  const parsed = JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
+  if (parsed.exp < Date.now()) return false;
+  return parsed;
 }
 
 
