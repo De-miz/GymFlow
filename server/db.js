@@ -323,16 +323,15 @@ export function getMetrics() {
   const allMembers = getAllMembers();
   const activeMembers = allMembers.filter(m => m.isActive).length;
 
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
   const activeToday = db.prepare(`
     SELECT COUNT(DISTINCT member_id) AS c FROM access_logs
-    WHERE status = 'granted' AND timestamp >= ?
-  `).get(today + 'T00:00:00').c;
+    WHERE status = 'granted' AND date(timestamp) = date('now')
+  `).get().c;
 
   const deniedToday = db.prepare(`
     SELECT COUNT(*) AS c FROM access_logs
-    WHERE status = 'denied' AND timestamp >= ?
-  `).get(today + 'T00:00:00').c;
+    WHERE status = 'denied' AND date(timestamp) = date('now')
+  `).get().c;
 
   const monthlyRevenue = allMembers
     .filter(m => m.isActive)
