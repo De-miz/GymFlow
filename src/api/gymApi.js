@@ -33,6 +33,16 @@ async function request(url, options = {}) {
   return data;
 }
 
+// ── Authentication ────────────────────────────────────────
+
+export const registerAdmin = (username, password) =>
+  request('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ username, password })
+  });
+
+export const getAdmins = () => request('/auth/admins');
+
 // ── Plans ─────────────────────────────────────────────────
 
 export const getPlans = () => request('/plans');

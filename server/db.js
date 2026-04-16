@@ -66,10 +66,18 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS admins (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     username      TEXT UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL
+    password_hash TEXT NOT NULL,
+    created_at    TEXT NOT NULL DEFAULT (datetime('now'))
   );
 
 `);
+
+try {
+  db.exec("ALTER TABLE admins ADD COLUMN created_at TEXT NOT NULL DEFAULT ''");
+  db.exec("UPDATE admins SET created_at = datetime('now') WHERE created_at = ''");
+} catch (e) {
+  // column probably exists
+}
 
 // ── Plans (seed once) ─────────────────────────────────────
 
@@ -127,7 +135,7 @@ export function registerAdmin(username, password) {
   if (existing) throw new Error('Username already exists');
   
   const h = hashPassword(password);
-  db.prepare('INSERT INTO admins (username, password_hash) VALUES (?, ?)').run(username, h);
+  db.prepare("INSERT INTO admins (username, password_hash, created_at) VALUES (?, ?, datetime('now'))").run(username, h);
   return true;
 }
 
@@ -152,6 +160,10 @@ export function verifyAdminToken(token) {
   const parsed = JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
   if (parsed.exp < Date.now()) return false;
   return parsed;
+}
+
+export function getAllAdmins() {
+  return db.prepare('SELECT id, username, created_at FROM admins ORDER BY id DESC').all();
 }
 
 
@@ -344,6 +356,11 @@ export function getMetrics() {
 // ── Seed Demo Data ────────────────────────────────────────
 
 export function seedDemoData() {
+  const adminCount = db.prepare('SELECT COUNT(*) AS c FROM admins').get().c;
+  if (adminCount === 0) {
+    registerAdmin('admin', 'admin');
+  }
+
   // Only seed if db is empty
   const count = db.prepare('SELECT COUNT(*) AS c FROM members').get().c;
   if (count > 0) return false;

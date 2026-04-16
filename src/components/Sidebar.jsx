@@ -26,6 +26,11 @@ const NAV_ITEMS = [
     label: 'Pricing',
     icon: <span className="material-symbols-outlined">payments</span>,
   },
+  {
+    path: '/register-admin',
+    label: 'Admins',
+    icon: <span className="material-symbols-outlined">admin_panel_settings</span>,
+  },
 ];
 
 export default function Sidebar() {
@@ -76,6 +81,7 @@ export function MobileNav() {
     { ...NAV_ITEMS[2], mobileLabel: 'Check-in' },
     { ...NAV_ITEMS[3], mobileLabel: 'Logs' },
     { ...NAV_ITEMS[4], mobileLabel: 'Pricing' },
+    { ...NAV_ITEMS[5], mobileLabel: 'Admins' },
   ];
 
   return (

@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import CheckIn from './pages/CheckIn';
 import Logs from './pages/Logs';
 import Pricing from './pages/Pricing';
+import RegisterAdmin from './pages/RegisterAdmin';
 import Auth from './pages/Auth';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
             <Route path="checkin" element={<CheckIn />} />
             <Route path="logs" element={<Logs />} />
             <Route path="pricing" element={<Pricing />} />
+            <Route path="register-admin" element={<RegisterAdmin />} />
           </Route>
         </Routes>
       </ToastProvider>

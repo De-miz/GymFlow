@@ -23,7 +23,8 @@ import {
   seedDemoData,
   registerAdmin,
   loginAdmin,
-  verifyAdminToken
+  verifyAdminToken,
+  getAllAdmins
 } from './db.js';
 
 const app = express();
@@ -70,6 +71,14 @@ app.post('/api/auth/login', (req, res) => {
     res.json(authData);
   } catch (err) {
     res.status(401).json({ error: err.message });
+  }
+});
+
+app.get('/api/auth/admins', (req, res) => {
+  try {
+    res.json(getAllAdmins());
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
